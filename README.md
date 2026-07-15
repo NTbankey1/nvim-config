@@ -2,7 +2,7 @@
 
 A structured, feature-rich Neovim configuration optimized for **LaTeX**, **Markdown**, **Jupyter Notebooks**, **Python**, **Typst**, and **NixOS**, with deep AI assistant integration.
 
-Author: **Benjamin Brast-McKie**
+Author: **Ntbankey1**
 
 ---
 
