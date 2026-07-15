@@ -4,6 +4,8 @@ A structured, feature-rich Neovim configuration optimized for **LaTeX**, **Markd
 
 Author: **Ntbankey1**
 
+![Neovim Configuration Screenshot](assets/screenshot.png)
+
 ---
 
 ## Features at a Glance
