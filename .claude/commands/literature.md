@@ -1,0 +1,1 @@
+../extensions/literature/commands/literature.md

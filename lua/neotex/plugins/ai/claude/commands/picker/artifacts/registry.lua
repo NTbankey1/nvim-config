@@ -1,0 +1,319 @@
+-- neotex.plugins.ai.claude.commands.picker.artifacts.registry
+-- Central registry of artifact types with metadata and formatting
+
+local M = {}
+
+-- Hook event descriptions (short for picker display, long for previewer)
+-- Consolidates previously duplicate tables from entries.lua and previewer.lua
+M.HOOK_EVENT_DESCRIPTIONS = {
+  Stop = {
+    short = "After command completion",
+    long = "Triggered after command completion",
+  },
+  SessionStart = {
+    short = "When session begins",
+    long = "When Claude Code session begins",
+  },
+  SessionEnd = {
+    short = "When session ends",
+    long = "When Claude Code session ends",
+  },
+  SubagentStop = {
+    short = "After subagent completes",
+    long = "After subagent completes",
+  },
+  Notification = {
+    short = "Permission/idle events",
+    long = "Permission or idle notification events",
+  },
+  PreToolUse = {
+    short = "Before tool execution",
+    long = "Before tool execution",
+  },
+  PostToolUse = {
+    short = "After tool execution",
+    long = "After tool execution",
+  },
+  UserPromptSubmit = {
+    short = "When prompt submitted",
+    long = "When user prompt submitted",
+  },
+  PreCompact = {
+    short = "Before context compaction",
+    long = "Before context compaction",
+  },
+}
+
+-- Artifact type configurations
+-- Each artifact type defines its scanning, display, and behavior characteristics
+M.ARTIFACT_TYPES = {
+  command = {
+    name = "command",
+    plural = "Commands",
+    extension = ".md",
+    subdirs = { "commands" },
+    preserve_permissions = false,
+    description_parser = "parse_command_description",
+    heading = "[Commands]",
+    heading_description = "Slash commands",
+    tree_indent = " ",
+    picker_visible = true,
+    sync_enabled = true,
+  },
+
+  skill = {
+    name = "skill",
+    plural = "Skills",
+    extension = ".md",
+    subdirs = { "skills" },
+    preserve_permissions = false,
+    description_parser = "parse_skill_description",
+    heading = "[Skills]",
+    heading_description = "Model-invoked capabilities",
+    tree_indent = " ",
+    picker_visible = true,
+    sync_enabled = true,
+  },
+
+  hook_event = {
+    name = "hook_event",
+    plural = "Hook Events",
+    extension = ".sh",
+    subdirs = { "hooks" },
+    preserve_permissions = true,
+    description_parser = "parse_script_description",
+    heading = "[Hook Events]",
+    heading_description = "Event-triggered scripts",
+    tree_indent = "  ",  -- 2-space indent for hook events
+    picker_visible = true,
+    sync_enabled = true,
+    -- Special: hooks are grouped by event name
+    group_by_event = true,
+  },
+
+  template = {
+    name = "template",
+    plural = "Templates",
+    extension = ".yaml",
+    subdirs = { "templates" },
+    preserve_permissions = false,
+    description_parser = "parse_template_description",
+    heading = "[Templates]",
+    heading_description = "YAML templates",
+    tree_indent = " ",
+    picker_visible = true,
+    sync_enabled = true,
+  },
+
+  lib = {
+    name = "lib",
+    plural = "Lib Utilities",
+    extension = ".sh",
+    subdirs = { "lib" },
+    preserve_permissions = true,
+    description_parser = "parse_script_description",
+    heading = "[Lib Utilities]",
+    heading_description = "Shell libraries",
+    tree_indent = " ",
+    picker_visible = true,
+    sync_enabled = true,
+  },
+
+  script = {
+    name = "script",
+    plural = "Scripts",
+    extension = ".sh",
+    subdirs = { "scripts" },
+    preserve_permissions = true,
+    description_parser = "parse_script_description",
+    heading = "[Scripts]",
+    heading_description = "Standalone CLI tools",
+    tree_indent = " ",
+    picker_visible = true,
+    sync_enabled = true,
+    -- Custom keybindings for running scripts
+    custom_actions = {
+      run = true,  -- Enable <C-r> to run with arguments
+    },
+  },
+
+  test = {
+    name = "test",
+    plural = "Tests",
+    extension = ".sh",
+    subdirs = { "tests" },
+    preserve_permissions = true,
+    description_parser = "parse_script_description",
+    heading = "[Tests]",
+    heading_description = "Test suites",
+    tree_indent = " ",
+    picker_visible = true,
+    sync_enabled = true,
+    -- Custom keybindings for running tests
+    custom_actions = {
+      run = true,  -- Enable <C-t> to run test
+    },
+    -- Filter for test_*.sh pattern
+    pattern_filter = "^test_",
+  },
+
+  doc = {
+    name = "doc",
+    plural = "Docs",
+    extension = ".md",
+    subdirs = { "docs" },
+    preserve_permissions = false,
+    description_parser = "parse_doc_description",
+    heading = "[Docs]",
+    heading_description = "Documentation files",
+    tree_indent = " ",
+    picker_visible = true,
+    sync_enabled = true,
+  },
+
+  -- Artifact types used by sync but not displayed in picker
+  standard = {
+    name = "standard",
+    plural = "Standards",
+    extension = ".md",
+    subdirs = { "docs" },
+    preserve_permissions = false,
+    description_parser = "parse_doc_description",
+    heading = "[Standards]",
+    heading_description = "Standard definitions",
+    tree_indent = " ",
+    picker_visible = false,
+    sync_enabled = true,
+  },
+
+  data_doc = {
+    name = "data_doc",
+    plural = "Data Docs",
+    extension = ".md",
+    subdirs = { "docs" },
+    preserve_permissions = false,
+    description_parser = "parse_doc_description",
+    heading = "[Data Docs]",
+    heading_description = "Data documentation",
+    tree_indent = " ",
+    picker_visible = false,
+    sync_enabled = true,
+  },
+
+  settings = {
+    name = "settings",
+    plural = "Settings",
+    extension = ".sh",
+    subdirs = { "." },  -- Root .claude directory
+    preserve_permissions = false,
+    description_parser = "parse_script_description",
+    heading = "[Settings]",
+    heading_description = "Configuration files",
+    tree_indent = " ",
+    picker_visible = false,
+    sync_enabled = true,
+  },
+}
+
+--- Get artifact type configuration
+---@param type_name string Artifact type name
+---@return table|nil Configuration table or nil if not found
+function M.get_type(type_name)
+  return M.ARTIFACT_TYPES[type_name]
+end
+
+--- Get all artifact types
+---@return table Map of type_name -> config
+function M.get_all_types()
+  return M.ARTIFACT_TYPES
+end
+
+--- Get all picker-visible artifact types
+---@return table Array of artifact type configurations
+function M.get_visible_types()
+  local visible = {}
+  for _, config in pairs(M.ARTIFACT_TYPES) do
+    if config.picker_visible then
+      table.insert(visible, config)
+    end
+  end
+  return visible
+end
+
+--- Get all sync-enabled artifact types
+---@return table Array of artifact type configurations
+function M.get_sync_types()
+  local sync_types = {}
+  for _, config in pairs(M.ARTIFACT_TYPES) do
+    if config.sync_enabled then
+      table.insert(sync_types, config)
+    end
+  end
+  return sync_types
+end
+
+--- Check if artifact type should preserve file permissions
+---@param type_name string Artifact type name
+---@return boolean True if permissions should be preserved
+function M.should_preserve_permissions(type_name)
+  local config = M.get_type(type_name)
+  return config and config.preserve_permissions or false
+end
+
+--- Format artifact for display in picker
+---@param artifact table Artifact data with name, description, is_local
+---@param type_name string Artifact type
+---@param indent_char string Tree character (├─ or └─)
+---@return string Formatted display string
+function M.format_artifact(artifact, type_name, indent_char)
+  local config = M.get_type(type_name)
+  if not config then
+    return ""
+  end
+
+  local prefix = artifact.is_local and "*" or " "
+  local description = artifact.description or ""
+
+  -- Strip redundant "Specialized in " prefix if present
+  description = description:gsub("^Specialized in ", "")
+
+  -- Format: "* ├─ artifact-name     Description text"
+  -- Standard 1-space indent (skills, templates, lib, docs, commands)
+  -- Exception: hook events use 2-space indent (distinguishing marker)
+  local indent_spaces = config.tree_indent or " "
+
+  return string.format(
+    "%s%s%s %-38s %s",
+    prefix,
+    indent_spaces,
+    indent_char,
+    artifact.name,
+    description
+  )
+end
+
+--- Format heading for artifact section
+---@param type_name string Artifact type
+---@return string Formatted heading display
+function M.format_heading(type_name)
+  local config = M.get_type(type_name)
+  if not config then
+    return ""
+  end
+
+  return string.format(
+    "%-40s %s",
+    config.heading,
+    config.heading_description
+  )
+end
+
+--- Get tree indent for artifact type
+---@param type_name string Artifact type
+---@return string Indent string (" " or "  ")
+function M.get_tree_indent(type_name)
+  local config = M.get_type(type_name)
+  return config and config.tree_indent or " "
+end
+
+return M

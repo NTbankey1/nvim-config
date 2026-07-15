@@ -1,0 +1,79 @@
+let SessionLoad = 1
+let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-1 siso=-1
+let v:this_session=expand("<sfile>:p")
+silent only
+silent tabonly
+cd ~/Projects
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+let s:shortmess_save = &shortmess
+if &shortmess =~ 'A'
+  set shortmess=aoOA
+else
+  set shortmess=aoO
+endif
+badd +7 awesome-low-level-design/solutions/python/airlinemanagementsystem/aircraft.py
+badd +1 awesome-low-level-design/solutions/python/airlinemanagementsystem/airline_management_system.py
+badd +78 awesome-low-level-design/design-patterns/patterns/behavioral/command.py
+badd +22 awesome-low-level-design/design-patterns/patterns/behavioral/memento.py
+badd +7 awesome-low-level-design/solutions/python/airlinemanagementsystem/airline_management_system_demo.py
+badd +11 awesome-low-level-design/solutions/python/airlinemanagementsystem/flight.py
+badd +65 awesome-low-level-design/.headroom/memory.db
+badd +1 awesome-low-level-design/.headroom/memories/projects/awesome-low-level-design-a458aabd44a31c8a/memory.db
+badd +1 awesome-low-level-design/pyright_output.txt
+badd +12 awesome-low-level-design/VIM_SHORTCUTS.md
+badd +12 awesome-low-level-design/docs/superpowers/plans/2026-06-15-snakeandladder-cpp.md
+badd +2 missfont.log
+badd +11 CMakeLists.txt
+badd +28 awesome-low-level-design/solutions/python/atm/atm_state.py
+badd +15 awesome-low-level-design/solutions/python/atm/atm_demo.py
+badd +7 awesome-low-level-design/solutions/python/atm/operation_type.py
+badd +1 build/build.ninja
+badd +1 awesome-low-level-design/class-diagrams/digitalwalletservice-class-diagram.png
+badd +3 ~/Projects/awesome-low-level-design/solutions/python/airlinemanagementsystem/booking_manager.py
+badd +1 ~/Projects/awesome-low-level-design/solutions/python/atm/account.py
+badd +19 ~/Projects/awesome-low-level-design/solutions/python/atm/atm.py
+badd +1 ~/Projects/awesome-low-level-design/solutions/python/airlinemanagementsystem/booking.py
+badd +1 ~/Projects/awesome-low-level-design/solutions/python/airlinemanagementsystem/flight_search.py
+badd +1 ~/Projects/awesome-low-level-design/solutions/python/airlinemanagementsystem/passenger.py
+badd +1 ~/Projects/awesome-low-level-design/solutions/python/airlinemanagementsystem/payment.py
+badd +1 ~/Projects/awesome-low-level-design/solutions/python/airlinemanagementsystem/seat.py
+badd +1 ~/Projects/awesome-low-level-design/solutions/python/airlinemanagementsystem/README.md
+badd +23 ~/Projects/awesome-low-level-design/solutions/python/atm/README.md
+argglobal
+%argdel
+edit ~/Projects/awesome-low-level-design/solutions/python/atm/atm.py
+argglobal
+setlocal foldmethod=manual
+setlocal foldexpr=v:lua.vim.treesitter.foldexpr()
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=99
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 19 - ((18 * winheight(0) + 23) / 47)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 19
+normal! 01|
+tabnext 1
+if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20
+let &shortmess = s:shortmess_save
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if filereadable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &g:so = s:so_save | let &g:siso = s:siso_save
+nohlsearch
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :

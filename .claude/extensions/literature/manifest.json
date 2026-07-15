@@ -1,0 +1,58 @@
+{
+  "name": "literature",
+  "version": "2.0.0",
+  "description": "Unified literature management: scan, convert PDFs/DJVUs, maintain index.json, search/import from Zotero, and manage per-repo sub-index. Replaces separate zotero extension.",
+  "dependencies": [
+    "core",
+    "filetypes"
+  ],
+  "routing_exempt": true,
+  "provides": {
+    "agents": [
+      "literature-agent.md"
+    ],
+    "commands": [
+      "literature.md",
+      "cite.md"
+    ],
+    "skills": [
+      "skill-literature",
+      "skill-cite"
+    ],
+    "context": [
+      "project/literature"
+    ],
+    "scripts": [
+      "zotero-search.sh",
+      "cite-extract.sh",
+      "zotero-read.sh",
+      "zotero-write.sh",
+      "zotero-setup.sh",
+      "zotero-chunk.sh",
+      "zotero-attach-chunks.sh",
+      "zotero-index-add.sh",
+      "zotero-index-remove.sh",
+      "literature-briefing.sh",
+      "literature-create-setup-task.sh",
+      "test-lit-pipeline.sh"
+    ]
+  },
+  "merge_targets": {
+    "claudemd": {
+      "source": "EXTENSION.md",
+      "target": ".claude/CLAUDE.md",
+      "section_id": "extension_literature"
+    },
+    "index": {
+      "source": "index-entries.json",
+      "target": ".claude/context/index.json"
+    }
+  },
+  "keyword_overrides": {
+    "literature": "meta",
+    "zotero": "meta",
+    "bibliography": "meta",
+    "citation": "meta"
+  },
+  "hooks": {}
+}

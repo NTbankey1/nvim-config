@@ -1,0 +1,317 @@
+---
+next_project_number: 793
+---
+
+# TODO
+
+## Task Order
+
+*Updated 2026-07-01. Generated from state.json dependency graph.*
+
+**Dependency Waves**:
+| Wave | Tasks | Blocked by | Topics |
+|------|-------|------------|--------|
+| 1 | 78,87,772,775,777,778,780,782,783,787,791 | -- | agent-system, literature, Terminal UI, ... |
+| 2 | 773,774,776,779,781,785 | 772,775,778,780 | agent-system, literature |
+| 3 | 786 | 785 | agent-system |
+| 4 | 788 | 786,787 | agent-system |
+
+**Grouped by Topic** (indented = depends on parent):
+
+### Agent System
+
+772 [NOT STARTED] — [--hard IMPLEMENTATION leg: focus each agent round on an INDIVIDU
+  └─ 773 [NOT STARTED] — The anti-analysis contract (H2, .claude/context/contracts/anti-an
+777 [NOT STARTED] — [--hard RESEARCH leg: more effort, higher standards for quality, 
+778 [NOT STARTED] — [--hard CORE EFFECT: relax the zero-debt policy to permit STRATEG
+  └─ 774 [NOT STARTED] — [--hard PLANNING leg: make phases SMALLER and divide work into a 
+  └─ 779 [NOT STARTED] — [--hard recovery discipline] Define an unambiguous recovery contr
+780 [NOT STARTED] — [Working-tree preservation] Prevent agents from destroying uncomm
+  └─ 779 [NOT STARTED] — [--hard recovery discipline] Define an unambiguous recovery contr (see above)
+  └─ 781 [NOT STARTED] — [Context-overflow safety] Dispatched agents must detect context p
+  └─ 785 [NOT STARTED] — Replace the repo-wide `git add -A` in the task commit pipeline wi
+    └─ 786 [NOT STARTED] — Sweep the 40+ remaining `git add -A` references across the agent 
+      └─ 788 [NOT STARTED] — Prevent concurrent sessions from clobbering a shared working tree
+782 [NOT STARTED] — [Formal-domain context hygiene] Reduce the context that lean4/for
+783 [NOT STARTED] — Fix the sorry-census methodology in the review/vet agent tooling 
+787 [NOT STARTED] — Make multi-task creation declare dependencies based on FILE FOOTP
+  └─ 788 [NOT STARTED] — Prevent concurrent sessions from clobbering a shared working tree (see above)
+791 [PR READY] — Fix the <leader>al 'Load Core' loader so WezTerm lifecycle tab co
+
+### Literature
+
+775 [NOT STARTED] — [--lit, NO SILENT FALLBACK] When --lit is used but no per-repo sp
+  └─ 776 [NOT STARTED] — Two coupled fixes so --lit works outside the formal /research N -
+
+### Terminal UI
+
+87 [RESEARCHED] — Investigate why the terminal working directory changes to a proje
+
+### Email Integration
+
+78 [PLANNED] — Fix Gmail SMTP authentication failure when sending emails via Him
+
+## Tasks
+
+### 792. Right-size slash-command model: frontmatter (reserve opus for orchestrators/deep-reasoning)
+- **Effort**: 2-3 hours
+- **Status**: [COMPLETED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: Task 790
+- **Research**: [792_right_size_command_model_tiers/reports/01_command-model-tier-inventory.md]
+- **Plan**: [792_right_size_command_model_tiers/plans/01_right-size-command-model-tiers.md]
+- **Summary**: [792_right_size_command_model_tiers/summaries/01_right-size-command-model-tiers-summary.md]
+
+**Description**: Right-size the `model:` frontmatter across all slash-commands now that the tiering rationale is refreshed (task 790) and the sonnet tier is pinned to Sonnet 5 with 1M context (task 789). PROBLEM: ~18 of the command files carry `model: opus` indiscriminately, including pure-utility commands that do no deep reasoning -- e.g. /tag, /todo, /refresh, /merge, /fix-it, /errors, /spawn, /task, /project-overview, /pr, /vet -- so they pay Opus cost/latency for what is orchestration glue and direct-execution work. SCOPE: (1) Classify every command in .claude/commands/*.md by whether it needs opus. KEEP-OPUS: the context-accumulating orchestrator commands (/research, /plan, /implement, /orchestrate) which run long multi-subagent sessions and rely on the opus 1M-context auto-upgrade, plus genuine deep-reasoning commands (/meta, /revise) -- confirm against the agent-frontmatter-standard.md policy refreshed in task 790. DOWNGRADE-CANDIDATES: utility/direct-execution and single-shot commands (/tag, /todo, /refresh, /merge, /fix-it, /errors, /spawn, /task, /project-overview, /pr, /vet, /review) -- decide per-command between `model: sonnet` and OMITTING the field entirely (inherit CLAUDE_CODE_SUBAGENT_MODEL / harness default). Prefer omission where the command just delegates to a skill/agent that already declares its own model, so the command frontmatter does not override the agent tier. (2) Apply the changes across BOTH synced .claude/ trees (nvim /home/benjamin/.config/nvim/.claude/ and dotfiles /home/benjamin/.dotfiles/.claude/), respecting the generation caveat: nvim command files may be generated from extension sources -- edit the correct source (extensions/*/commands or merge-sources) and flag the user-run Neovim-picker resync; dotfiles has no generator (hand-edit). (3) Note any command whose frontmatter `model` is load-bearing for a documented reason before downgrading. VERIFICATION: each command still routes correctly; orchestrator commands retain opus; grep confirms the intended per-command tiers in both trees. OUT OF SCOPE: agent frontmatter re-tiering (task 790 settled: zero moves) and changing the orchestrator commands opus default (explicitly kept). Depends on 790 (uses its refreshed rationale) and benefits from 789 (sonnet=Sonnet5 1M). Goal: commands run on the cheapest tier that preserves correctness, with opus reserved for the commands that genuinely need it.
+
+---
+
+### 791. Fix Load Core loader so WezTerm lifecycle tab coloring propagates to all synced repos
+- **Effort**: 3-5 hours
+- **Status**: [PR READY]
+- **Task Type**: neovim
+- **Topic**: agent-system
+- **Dependencies**: None
+- **Research**: [791_loader_wezterm_status_hook_merge/reports/01_loader-settings-merge.md]
+- **Plan**: [791_loader_wezterm_status_hook_merge/plans/01_loader-settings-merge-plan.md]
+- **Summary**: [791_loader_wezterm_status_hook_merge/summaries/01_loader-settings-merge-summary.md]
+
+**Description**: Fix the <leader>al 'Load Core' loader so WezTerm lifecycle tab coloring works in every repo the agent system is copied into, not just this one. ROOT CAUSE (confirmed): lifecycle tab coloring (researching/planning/implementing/completed/blocked, etc.) is driven by the CLAUDE_STATUS WezTerm user variable, read in ~/.config/wezterm/wezterm.lua's format-tab-title handler (lines ~316-338). CLAUDE_STATUS is only set when a status-emitting hook fires (wezterm-notify.sh / wezterm-preflight-status.sh / wezterm-clear-status.sh). A hook fires only if (a) its script is present under .claude/hooks/ AND (b) it is REGISTERED in .claude/settings.json. Load Core syncs the hook SCRIPTS but NOT the registration: in lua/neotex/plugins/ai/claude/commands/picker/operations/sync.lua (scan_all_artifacts, lines ~894-910), settings.json uses install-only semantics -- copy if absent, replace only if a settings.json.managed marker exists, otherwise SKIP. So any target repo that already has a .claude/settings.json never receives the status-hook registrations, CLAUDE_STATUS is never emitted, and inactive tabs keep the default gray. This repo works only because its settings.json already registers the status hook. FIX DIRECTION (validate/refine during /research): instead of skipping settings.json wholesale, MERGE the core wezterm status-hook registrations into the target's existing settings.json without clobbering project-specific permissions/MCP servers. Infrastructure already exists: merge.lua provides merge_settings()/unmerge_settings() (lines ~229-263), and the core manifest (.claude/extensions/core/manifest.json:7-17) already declares merge_targets for claudemd and index but NOT settings. Add a merge_targets.settings fragment (core hook registrations) and wire the loader to merge it on Load Core, idempotently. Ensure the loader change also propagates to the synced .opencode tree if applicable, and keep the two synced .claude/ trees (dotfiles + nvim) consistent. Verify end-to-end: after Load Core into a repo with a pre-existing settings.json, the wezterm status hooks are registered and lifecycle tab coloring works. OUT OF SCOPE: redesigning the wezterm.lua color palette; the TASK_NUMBER title mechanism (already works). PRIMARY FILES: lua/neotex/plugins/ai/claude/commands/picker/operations/sync.lua, lua/neotex/plugins/ai/shared/extensions/merge.lua, .claude/extensions/core/manifest.json, .claude/extensions/core/root-files/settings.json.
+
+---
+
+### 790. Re-evaluate model tiering for Sonnet 5: re-tier agents, refresh benchmarks, fix neovim-research
+- **Effort**: 3-5 hours
+- **Status**: [COMPLETED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: Task 789
+
+**Description**: Re-evaluate and update the model tiering policy now that Sonnet 5 is released (and the fleet runs Opus 4.8), then RE-TIER agents where justified. USER-CONFIRMED: re-tiering IS in scope (not docs-only). CONTEXT: the tiering rationale in .claude/docs/reference/standards/agent-frontmatter-standard.md rests on stale benchmarks ("Sonnet 4.6 achieves 79.6%% on SWE-bench vs Opus 4.6 at 80.8%%", references "Opus 4.6") and a hard constraint that orchestrator commands (/research /plan /implement) MUST be opus solely to receive the 1M-context auto-upgrade via ANTHROPIC_DEFAULT_OPUS_MODEL. SCOPE: (1) Refresh benchmark citations and rationale to current Sonnet 5 / Opus 4.8 reality. (2) Re-examine the orchestrator 1M-context constraint -- with `claude-sonnet-5[1m]` pinned (task 789), determine whether orchestrators / other opus-tier roles can move to sonnet for cost savings without losing 1M context, and apply the moves that hold up. (3) Propose + apply re-tiering of specific opus-tier agents (e.g. domain research agents) to sonnet where Sonnet 5 is now sufficient; keep genuine deep-reasoning roles (planner, meta-builder, reviser, formal-verification) on opus unless research shows otherwise. (4) Fix the confirmed discrepancy: neovim-research is listed as opus in the CLAUDE.md routing table but sonnet in frontmatter -- USER-CONFIRMED it should be SONNET; reconcile the routing table (and any other alias mismatches surfaced) to sonnet. (5) Keep the two synced .claude/ trees (dotfiles and nvim) consistent. DEPENDS ON 789 (needs the concrete Sonnet 5 variant pinned before deciding what can move). Goal: a current, correctly-benchmarked tiering policy with agent assignments actually updated for Sonnet 5.
+
+---
+
+### 789. Pin sonnet tier to Sonnet 5 (1M context) via ANTHROPIC_DEFAULT_SONNET_MODEL
+- **Effort**: 1-2 hours
+- **Status**: [COMPLETED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: None
+
+**Description**: Pin the `sonnet` model tier to Sonnet 5 with 1M context, mirroring the existing Opus pattern. CONTEXT: model config is version-agnostic -- all ~70 sonnet-tier agents use the symbolic `sonnet` alias, but there is NO `ANTHROPIC_DEFAULT_SONNET_MODEL` set, so `sonnet` resolves to Claude Code's built-in default rather than deterministically Sonnet 5. The Opus tier is already pinned via `ANTHROPIC_DEFAULT_OPUS_MODEL: claude-opus-4-8[1m]`. SCOPE: (1) Add `ANTHROPIC_DEFAULT_SONNET_MODEL` to the `env` block of dotfiles/config/claude/settings.json (/home/benjamin/.dotfiles/config/claude/settings.json), USER-CONFIRMED to the 1M-context variant `claude-sonnet-5[1m]` -- research/verify during /research that the `[1m]` suffix is the correct form for Sonnet 5 (confirm against the Opus `[1m]` precedent and Claude Code env-var conventions). (2) Update the `_MODEL_NOTE` comment to document that BOTH Opus and Sonnet tiers now have a single source of truth here, and to warn against pinning elsewhere. (3) Verify the settings.json activation-script deploy path (modules/home/core/shell.nix copies to ~/.claude/settings.json) still picks up the change. NOTE: this task edits the DOTFILES repo, not the nvim/.claude tree. OUT OF SCOPE: agent frontmatter (untouched -- aliases resolve automatically); tiering-policy re-evaluation (task 790). Goal: sonnet-tier agents deterministically run Sonnet 5 with 1M context.
+
+---
+
+### 788. Concurrent-session protection: task lock + mandatory commit-per-green-substep
+- **Effort**: 4-6 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: Task 786, Task 787
+
+**Description**: Prevent concurrent sessions from clobbering a shared working tree (the 427 failure: an uncommitted in-progress task wiped by a concurrent session). USER-SELECTED SCOPE: lock + commit-per-step, NO git-worktree integration (keep the single shared tree; worktree isolation explicitly deferred). ROOT CAUSE: no concurrency protection exists -- manage-topics.sh assumes 'single-threaded sessions', state.json is last-write-wins, and nothing reserves a task for one session. Scope: (1) TASK LOCK: a session must reserve a task before working it -- a lock (lockfile under specs/{NNN}_{SLUG}/.lock or a state.json lock field) recording session_id + heartbeat timestamp; /orchestrate and /implement acquire on entry and REFUSE (with clear guidance) if a fresh lock is held by another session, with a stale-lock override threshold and release on completion/abort. (2) COMMIT-PER-GREEN-SUBSTEP: mandate an incremental commit at every green sub-step so in-progress work lives in git, not only the working tree -- align with checkpoint discipline and the scoped-staging contract from 785/786. (3) Coordinate with the 779/780/781 git-safety + checkpoint cluster (snapshot-before-rollback, checkpoint-before-overflow) so locking + commit cadence compose. OUT OF SCOPE: git worktree isolation (deferred). Depends on 786 (edits orchestrate.md/implement.md) and 787 (shared state schema + uses file_scope for lock granularity). Goal: a concurrent session can never silently destroy another session's uncommitted progress.
+
+---
+
+### 787. File-footprint-aware task dependency declaration (serialize same-file tasks)
+- **Effort**: 3-5 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: None
+
+**Description**: Make multi-task creation declare dependencies based on FILE FOOTPRINT OVERLAP, not just logical sequencing, so two tasks that will edit the same files are never dispatched in the same wave / run concurrently. ROOT CAUSE: dependencies[] exists in the schema but is used only for Kahn topo-ordering; task creation (multi-task-creation-standard Component 4) asks only about logical ordering, and territory/file-ownership (H7, context/contracts/territory.md) is hard-mode-only, per-phase, and declarative. Scope: (1) Add an optional task-level 'file_scope' (anticipated owned paths) field to the state.json task schema (.claude/rules/state-management.md + .claude/context/reference/state-management-schema.md), promoting H7 territory to a lightweight task-level declaration. (2) Extend multi-task-creation-standard.md Component 4 so creators capture each proposed task's file footprint and AUTO-ADD a dependency (or surface a conflict warning) when two footprints overlap. (3) Wire this into meta-builder-agent, skill-fix-it, and skill-spawn. (4) Document that /orchestrate and --team wave assignment must treat file-footprint overlap as a serialization edge. Goal: when the system proposes multiple tasks touching the same files, it declares the dependency automatically instead of leaving them parallelizable. This is the gap that let two same-file tasks run concurrently.
+
+---
+
+### 786. Propagate scoped-staging convention across all agent/command/skill templates
+- **Effort**: 2-4 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: Task 785
+
+**Description**: Sweep the 40+ remaining `git add -A` references across the agent system to the canonical scoped-staging pattern established in task 785, so no template re-introduces repo-wide staging. SITES (from audit): implementation agents (general-implementation-agent.md:435, general-implementation-hard-agent.md:214, neovim:364, nix:384, python:116, web:432, founder, cslib-implementation-hard:261); commands (implement.md:187,192; plan.md:500; research.md:473; orchestrate.md:250,258,375,382; errors.md:197); skills (skill-implementer + extension implement/research skills); and doc/command templates (creating-commands.md:127, command-template.md, checkpoint-commit.md:10, checkpoint-execution.md:114, subagent-continuation-loop.md:127, workflow-interruptions.md:217, research-flow-example.md, creating-skills.md:403). Update the command/skill generator TEMPLATES so newly-created components inherit scoped staging by default. Leave cslib/pr.md's deliberate 'git add -A then exclude' flow alone unless it can be made scoped safely. Goal: scoped staging is uniform -- 'grep -rn "git add -A" .claude/' returns only intentional, documented exceptions. Depends on 785 (canonical pattern). Coordinate with the 779/781 hard-mode cluster on shared agent files (e.g. general-implementation-hard-agent.md).
+
+---
+
+### 785. Scoped git staging: eliminate `git add -A` in the commit pipeline
+- **Effort**: 2-4 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: Task 780
+
+**Description**: Replace the repo-wide `git add -A` in the task commit pipeline with targeted, work-scoped staging so commits contain only files the operation actually produced. ROOT CAUSE: .claude/scripts/orchestrator-postflight.sh:322 runs 'git add -A && git commit', and agents track nothing about which files they modified -- so every research/plan/implement commit sweeps the entire working tree (including a concurrent session's stray edits). This contradicts the system's own policy: .claude/rules/git-workflow.md 'Commit Scope' (lines 51-62) and shared-core .claude/context/core/standards/git-safety.md (lines 182-195) already forbid 'git add -A'/'git commit -am' and prescribe targeted staging. Scope: (1) Define a commit-scope contract -- operation-type scope (research/plan -> specs/TODO.md + specs/state.json + specs/{NNN}_{SLUG}/; implement -> task dir + the source files the agent reports it modified) read from agent return-meta (modified_files) or a COMMIT_SCOPE param. (2) Rewrite orchestrator-postflight.sh (project + shared copy) to stage only those paths via 'git add <paths>', with 'git status --short'/'git diff --staged' review per the git-safety.md flow. (3) Harden git-workflow.md to explicitly FORBID 'git add -A'/'git commit -am' and reference the targeted-staging procedure. (4) Establish skill-git-workflow as the canonical scoped-commit helper. Goal: a commit reflects only the work actually accomplished, and a concurrent session's uncommitted changes can never be swept into this task's commit. Depends on 780 (also edits git-workflow.md, so serialized to avoid clobber).
+
+---
+
+### 784. /pr: select among new/stacked/update/amend PR workflows with auto-detection
+- **Effort**: 4-8 hours
+- **Status**: [COMPLETED]
+- **Task Type**: meta
+- **Topic**: cslib
+- **Dependencies**: None
+- **Research**: [784_pr_command_workflow_selection/reports/01_pr-workflow-selection-research.md]
+- **Plan**: [784_pr_command_workflow_selection/plans/01_pr-workflow-selection-plan.md]
+- **Summary**: [784_pr_command_workflow_selection/summaries/01_pr-workflow-selection-summary.md]
+
+**Description**: [/pr WORKFLOW SELECTION] Add a workflow-determination front-end to the PR-SUBMISSION path of the /pr command (cslib extension, source: .claude/extensions/cslib/commands/pr.md; deployed: .claude/commands/pr.md). Leave the --review path (STEP 0) and the PR-READY review-response posting path (STEP 0.5) UNTOUCHED. Insert a new early step immediately after argument parsing (STEP 1) that resolves WHICH of four workflows applies BEFORE any branch/CI work: (1) NEW branch from upstream/main (default; current STEP 4-5 behavior); (2) STACKED on an upstream PR -- create the feature branch from that PR head ref (gh pr checkout / fetch the PR head) instead of upstream/main, and set gh pr create --base to the PR head branch; (3) UPDATE an existing PR -- checkout the PR head branch, add a commit, push, do NOT call gh pr create; (4) AMEND/SQUASH + force-push -- amend or squash onto the existing PR branch and git push --force-with-lease (no new PR). FLAG SCHEME (3 flags + sensible default, per user decision "flags, not too many"): no flag => new (default); --stacked [PR]; --update [PR]; --amend [PR]. PR is an OPTIONAL positional ref accepting either a PR number or a full GitHub PR URL; reuse the existing github_pr URL-parsing logic from STEP 0.1. AUTO-DETECTION + INTERACTIVE FALLBACK (per user decision "auto-detect, confirm always"): when a chosen workflow needs a PR ref and none was supplied -- OR when no workflow flag was given at all -- query gh to locate candidate open PRs: git fetch upstream, then gh pr list / gh search prs against leanprover/cslib filtered to head branches that were pushed from the origin fork (benbrastmckie), matching by current branch name and/or task slug. ALWAYS surface findings in an AskUserQuestion for confirmation -- never silently auto-proceed. The interactive question must offer: pick the detected PR (with its number/title/head shown), choose a different workflow, SUPPLY A PR URL MANUALLY (when auto-detection finds nothing or the wrong PR), or fall back to a new branch from upstream. DOWNSTREAM STEP EDITS: STEP 4 (sync) and STEP 5 (branch creation) must branch by workflow (from upstream/main for new; from PR head for stacked; checkout existing PR head for update/amend rather than creating a feat/ branch). STEP 10 (commit/push/create) must: plain push + NO gh pr create for update; git push --force-with-lease for amend; gh pr create --base <pr-head-branch> for stacked; current behavior for new. STEP 5b mathlib cache fetch still applies on any branch switch. DOCS: update the command frontmatter argument-hint, the Options table, the Input Modes / Notes sections, the Output Examples, and add a short workflow-selection overview near the top. Verify manifest keyword_overrides (already lists rebase, cherry-pick) need no change, or extend if a new keyword (stacked, amend, update) improves task-type detection. CONSTRAINTS: respects .claude/rules/pr-prohibition.md -- /pr is user-invoked so its push/PR/force-push operations remain permitted ONLY within this command; agents/skills still must not push. Keep all four workflows behind explicit user approval gates (AskUserQuestion before any push or force-push, especially force-with-lease for amend). This is a meta task: modify the EXTENSION SOURCE at .claude/extensions/cslib/commands/pr.md and re-deploy, never hand-edit only the deployed copy. Lifecycle: /research 784 -> /plan 784 -> /implement 784.
+
+---
+
+### 783. Fix sorry-census to exclude comment/docstring lines (count only live proof debt)
+- **Effort**: 1-2 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: None
+
+**Description**: Fix the sorry-census methodology in the review/vet agent tooling so it stops counting Lean comment/docstring lines as proof debt. Root cause surfaced by cslib task 431 (origin repo: ~/Projects/cslib): the health-review census is a raw grep for 'sorry' over Cslib/**.lean, which swept up 7 docstring/comment occurrences (e.g. 'sorry-free', 'removing the sorry') plus a commented-out TODO stub, producing false 'unowned foundational sorry' findings. Moving to word-boundary 'sorry' did not help -- it still matches inside docstrings. Fix: make the census count only live proof debt -- strip Lean line comments (--) and block comments (/- -/) before matching, and/or cross-check against the compiler 'declaration uses sorry' warnings or #print axioms sorryAx. Update whichever shared agent-system tooling performs the census (the /review and/or /vet skills/scripts under .claude/). Evidence: cslib specs/431_audit_unowned_foundational_sorries/reports/01_unowned-sorries-audit.md, specs/reviews/review-2026-06-30.md, review-2026-06-30-2.md. Moved here from cslib (was task 437) because it is an agent-system change.
+
+---
+
+### 782. Formal-domain context hygiene: minimize goal-state context for lean4 agents
+- **Effort**: 2-4 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: None
+
+**Description**: [Formal-domain context hygiene] Reduce the context that lean4/formal-proof agents consume per step so enormous goal states do not overflow the window. MOTIVATING FAILURE: five dispatches on Lean tableau proofs overflowed because goal states are enormous and were repeatedly pulled into context. Scope (lean4 / formal domains -- applies to lean-*/cslib-* and formal hard agents and their context/contracts): (1) Goal-state query discipline: prefer TARGETED lean-lsp queries (lean_goal at a specific position, lean_minimal_hypotheses, lean_term_goal) over dumping full goal states; do NOT paste entire goal states into reasoning repeatedly; summarize the goal in a few lines and re-query precisely when needed. (2) File-read discipline: avoid re-reading whole large proof files; read only the region around the active proof; use lean_file_outline / targeted offset reads. (3) Hypothesis pruning: work from minimal hypotheses; avoid carrying large unused contexts forward. (4) Encode these as a formal-domain CONTEXT CONTRACT (an extension context file analogous to the lean4 override of anti-analysis.md) consumed by the lean/formal research + implementation hard agents. (5) Combine with checkpoint-before-overflow (task 781): hygiene lowers the baseline context; checkpointing handles the residual. SCOPE NOTE: this is domain-specific. If the lean/cslib extension lives in a separate repo, author the contract here and FLAG it for sync to that extension (do not assume the shared repo is the only consumer). Pairs with task 781. Goal: a single large goal state is handled by targeted querying and summarization rather than overflowing the agent's context.
+
+---
+
+### 781. Agent context-overflow safety: checkpoint + handoff before the hard limit
+- **Effort**: 3-6 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: Task 780
+
+**Description**: [Context-overflow safety] Dispatched agents must detect context pressure and CHECKPOINT before hitting the hard context limit, instead of crashing mid-work. MOTIVATING FAILURE: five agent dispatches on Lean tableau proofs (enormous goal states) hit 'Prompt is too long'; on overflow an agent crashes WITHOUT writing a handoff, leaving a stale handoff and a RED working tree -- which then triggers the revert/work-loss failure (the next agent sees RED and reverts). Scope (general -- all dispatched implementation/research agents): (1) Wire the existing context-exhaustion-detection.md into the dispatched implementation and research agents (general-implementation-hard-agent, general-research-hard-agent, and base variants), not just the orchestrator -- they must monitor context-pressure signals (large tool outputs, repeated reads, growing goal states, high tool-call count) and treat approaching the limit as a STOP condition. (2) Define the CHECKPOINT-BEFORE-OVERFLOW procedure: at the pressure threshold, STOP taking new work -> commit the current green state (or snapshot via task 780 if RED) -> write a complete H9 handoff (.orchestrator-handoff.json + continuation markdown) naming the exact next action -> terminate cleanly. Never crash mid-edit; never leave a stale handoff. (3) Ensure the handoff captures enough for a FRESH agent to resume with minimal context (the continuation-handoff markdown already specifies this), so work is divided across agents by CONTEXT BUDGET, not lost. (4) Coordinate with the small-phase/skeleton work (774/778): if a phase's single goal state is too large to fit, the agent lands a strategic-sorry skeleton (778) and hands off rather than overflowing. Pairs with task 780 (snapshot) and task 779 (resume must fix-forward, not revert). Goal: context overflow degrades gracefully to a clean handoff + recoverable checkpoint, never a crash that loses uncommitted progress. Depends on task 780 (snapshot mechanism for the RED-checkpoint path).
+
+---
+
+### 780. Agent git-safety: preserve uncommitted work, guard destructive git ops
+- **Effort**: 3-6 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: None
+
+**Description**: [Working-tree preservation] Prevent agents from destroying uncommitted progress via destructive git operations, and require a recoverable snapshot before any rollback. MOTIVATING FAILURE: an implementation agent ran a revert-to-last-green-commit that discarded uncommitted forward progress (FreshAbove scaffolding + an 8->4 sorry reduction); the work existed only in the working tree and was lost. Two layers: (1) RULE (behavioral): extend .claude/rules/git-workflow.md with a 'no destructive git on uncommitted work' rule -- agents MUST NOT run git operations that discard working-tree changes (git reset --hard, git checkout -- <path>, git checkout/switch that would overwrite changes, git restore <path>, git clean -fd, git stash drop/clear) while uncommitted changes exist, UNLESS a snapshot was just taken. Before any intentional rollback the agent MUST snapshot recoverably: a WIP commit on a scratch/throwaway branch, OR a .patch artifact under specs/{NNN}_{SLUG}/ (e.g. working-progress-{ts}.patch), OR at minimum git stash (without drop). (2) HOOK (enforced): add a PreToolUse hook (registered via settings.json / the hooks system, e.g. .claude/scripts/guard-destructive-git.sh) that intercepts Bash tool calls, detects the destructive git patterns above, and BLOCKS them (deny / non-zero) with corrective context UNLESS (a) the working tree is clean, or (b) a snapshot marker shows a snapshot was just created. The hook returns guidance pointing to the snapshot-first procedure. Model it after the existing PostToolUse validators (e.g. validate-meta-write.sh) and the hooks registration pattern in .claude/. (3) Provide a tiny helper the agent calls to snapshot (write the .patch + record the marker the hook checks). Scope: applies to ALL agents (not just hard-mode) -- accidental destruction is universal -- but keep it lightweight so legitimate clean-tree operations (e.g. checkout on a clean tree) are not blocked. Pairs with task 779 (snapshot-before-rollback is rung c of the recovery ladder). Goal: a misread or mistaken instruction can never irreversibly destroy uncommitted agent work.
+
+---
+
+### 779. Hard-mode: fix-forward recovery contract (disambiguate 'restore green')
+- **Effort**: 2-4 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: Task 778, Task 780
+
+**Description**: [--hard recovery discipline] Define an unambiguous recovery contract so 'reach green' / 'restore green' / 'get back to green' ALWAYS means FIX FORWARD (make the current working tree green by adding/correcting code) and NEVER means revert/reset/checkout to a prior green commit. MOTIVATING FAILURE: an orchestrator instruction 'if RED, first restore green' was misread by an implementation agent as 'revert to last green commit', discarding uncommitted forward progress (new FreshAbove scaffolding AND an 8->4 sorry reduction); the working tree was reset to the committed baseline and the progress was lost. Scope of changes: (1) Create/extend a recovery contract (e.g. .claude/context/contracts/recovery.md, or a section in wrap-up.md) stating: 'green' is reached by FIXING FORWARD only; an agent MUST NOT discard uncommitted work to reach green. (2) Define the canonical RECOVERY LADDER for a RED state: (a) fix forward; (b) if a sub-goal is genuinely blocked, land a documented STRATEGIC-SORRY skeleton (task 778) so the build goes green WITHOUT losing structure; (c) only if a rollback is truly required, SNAPSHOT first (task 780) then roll back, preferring the smallest revert scope. (3) Bake this into the hard-mode implementation contract (anti-analysis / wrap-up, consumed by general-implementation-hard-agent and skill-implementer-hard) and into skill-orchestrate-hard's dispatch prompt construction, so the orchestrator emits the disambiguated phrasing BY DEFAULT and does not rely on ad-hoc wording. (4) Align error-handling.md Build Error Recovery ('Keep source unchanged' / 'Never lose completed work') with the fix-forward language so guidance is consistent across docs. Scope: hard-mode primarily, but the fix-forward phrasing must be safe for standard mode too. Depends on task 778 (strategic-sorry skeleton = ladder rung b) and task 780 (snapshot-before-rollback = ladder rung c). Goal: a single ambiguous recovery instruction can never again be read as 'destroy uncommitted progress.'
+
+---
+
+### 778. Hard-mode: relax zero-debt for strategic-sorry skeletons (division mechanism)
+- **Effort**: 3-6 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: None
+
+**Description**: [--hard CORE EFFECT: relax the zero-debt policy to permit STRATEGIC SORRIES forming a SKELETON that divides the task into parts.] A primary effect of --hard is that the standard zero-debt / build-green completeness requirement is RELAXED to allow deliberately-placed, documented 'strategic' sorries (placeholder stubs) that scaffold a skeleton of the overall objective. The skeleton's strategic sorries are the DIVISION POINTS: each becomes a discrete part / follow-up task. This is the mechanism that connects the planning leg (task 774: skeleton + follow-up tasks) to the implementation leg (task 772: one phase per round). Scope of changes (hard-mode ONLY): (1) Relax zero-debt enforcement under --hard -- update the wrap-up build-green invariant (.claude/context/contracts/wrap-up.md, 'No leftover scaffolding' clause) and the anti-analysis Sub-Sorry Policy (.claude/context/contracts/anti-analysis.md) so a documented strategic-sorry skeleton is an ACCEPTABLE dispatch outcome under --hard. Under STANDARD mode, zero-debt still holds unchanged. (2) Define what makes a sorry 'strategic' and acceptable: a deliberate division boundary on the skeleton (NOT an abandoned proof), tightly scoped, documented with (a) what it assumes, (b) why deferred, (c) which follow-up task/part will discharge it. (3) Require every strategic sorry to map to a TRACKED part -- a follow-up task (created by planner-hard, task 774) or a sub-phase -- so relaxed zero-debt is VISIBLE and TRACKED, never silently abandoned. (4) Update the hard implementer/agent verification (skill-implementer-hard / general-implementation-hard-agent) and the handoff sorry_inventory so a documented strategic-sorry skeleton is reported as 'implemented (skeleton)' rather than 'failed/partial', while the sorry_inventory MUST enumerate every strategic sorry and its owning follow-up task. (5) Build-green still holds: the skeleton with strategic sorries must still compile/typecheck (sorries are valid placeholders), so 'green build with tracked strategic sorries' is the hard-mode skeleton-completion bar. Domain note: Lean4 'sorry' is the canonical strategic placeholder; the same idea applies to other domains (stubbed functions, 'admit', NotImplemented). CONTEXT: on task 305 the zero-debt expectation (no incomplete proofs) combined with an oversized phase pushed the orchestrator to try to fully prove a research-grade lemma in one round, driving burnout; allowing a strategic-sorry skeleton would have let it land the structure and divide the remaining proof obligations into tracked parts. Foundational --hard policy that the planning leg (774) and implementation leg (772) build on.
+
+---
+
+### 777. Hard-mode research: more effort, higher quality and verification standards
+- **Effort**: 3-6 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: None
+
+**Description**: [--hard RESEARCH leg: more effort, higher standards for quality, consistency, and verification of findings.] Strengthen hard-mode research (skill-researcher-hard / general-research-hard-agent, and domain research-hard agents where applicable) so --hard research is materially more rigorous than standard research, not just a relabel. (1) Raise the effort/coverage bar: require broader source coverage and deeper investigation before concluding (more searches, cross-checking multiple independent sources, no single-source conclusions). (2) Higher quality + consistency standards: require findings to be internally consistent and cross-validated; surface and RESOLVE contradictions rather than reporting them flatly. (3) Harden VERIFICATION of findings: extend the existing H4 adversarial self-verification and H3 reference grounding so every load-bearing claim is verified against a concrete source or counterexample before it ships, and uncertain claims are explicitly marked with confidence levels. (4) Encode the higher standard as enforceable CONTRACT language (analogous to the anti-analysis contract), in the research-hard skill/agent and any research-hard contract file, not just prose. Scope: hard-mode only; do NOT change standard research. CONTEXT: completes the three-leg --hard model alongside the implementation leg (task 772) and the planning leg (task 774). Motivating evidence: in transcript .claude/output/lit.md a hasty inline (non-hard) research conclusion was later found UNSOUND by a more careful standard-mode audit -- hard research should make that level of verification the default, raising confidence in the findings that drive planning and implementation.
+
+---
+
+### 776. Make --lit navigation work for ad-hoc dispatch and sync stale CLAUDE.md docs
+- **Effort**: 3-6 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: literature
+- **Dependencies**: Task 775
+
+**Description**: Two coupled fixes so --lit works outside the formal /research N --lit command path and is documented accurately. (1) Ad-hoc dispatch directive: create a reusable 'literature navigation directive' that the primary/orchestrator agent injects when the user asks for --lit conversationally (not via skill Stage 4a). When no per-repo sub-index exists, this path must surface the SAME interactive question defined in task 775 (create curation task vs use global now) -- it must NOT silently inject nothing and must NOT silently auto-search. Once a path is chosen, the dispatched agent receives the <literature-briefing> navigation instructions (run literature-search.sh against the chosen corpus, Read the relevant segmented chunk files). Reference how Stage 4a generates lit_context. (2) CLAUDE.md doc sync: the 'Literature Mode (--lit)' section still describes the DEPRECATED static-dump model (literature-retrieve.sh, <literature-context>, 'reads all .md and .txt files from specs/literature/', TOKEN_BUDGET=4000/MAX_FILES=10). Rewrite the 'What --lit Does' and 'Interactive Sub-Index Setup Detection' subsections to describe (i) the live navigate-on-demand briefing (literature-briefing.sh -> <literature-briefing>) against the global segmented corpus, and (ii) the interactive no-silent-fallback behavior from task 775 (create-curation-task vs use-global-now). Reconcile the token-budget drift (literature-retrieve.sh header 8000, CLAUDE.md 4000, global index.json 8000). Root causes: G3 (navigation reachable only from skill Stage 4a), G4 (stale CLAUDE.md misdocuments --lit). Depends on task 775 (documents the interactive behavior 775 implements).
+
+---
+
+### 775. --lit: interactive prompt when no per-repo sub-index (no silent fallback)
+- **Effort**: 3-6 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: literature
+- **Dependencies**: None
+
+**Description**: [--lit, NO SILENT FALLBACK] When --lit is used but no per-repo specs/literature-index.json sub-index exists, the system MUST present an INTERACTIVE question (AskUserQuestion) -- never silently do nothing, and never silently auto-search. The question asks the user to choose between: (a) CREATE A TASK to curate a per-repo sub-index (so future --lit runs use a focused, repo-specific selection from the global corpus), or (b) POINT TO THE GLOBAL corpus now (run a relevance search against the global ~/Projects/Literature FTS5 index via literature-search.sh, keyed by the task description, and build a <literature-briefing> from the top-N matching segments for this run). (1) literature-briefing.sh must accept the task description/query (it currently takes no arguments) and support a global-corpus briefing mode used by option (b). (2) Wire the interactive prompt into the skill Stage 4a callers (skill-researcher, skill-researcher-hard, skill-planner, skill-planner-hard, skill-implementer, skill-implementer-hard) -- reconcile with / replace the existing 3-option Stage 4a flow (Skip / Create setup task / Create+run) so the choice is clearly 'create curation task' vs 'use global now', and NO branch silently yields an empty briefing. (3) Either briefing path always carries the 'How to Use' footer directing the agent to run literature-search.sh and Read the relevant segmented chunk files. (4) DESIGN QUESTION to resolve during /plan: define the default for autonomous contexts (e.g. /orchestrate) where AskUserQuestion cannot prompt -- it must be a VISIBLE, logged choice (e.g. default to global with a logged notice, or create-and-defer), never a silent no-op. Root causes: G1 (hard gate + silent empty exit), G2 (no global-corpus option). SUPERSEDES the earlier non-interactive auto-fallback design per user direction: 'I don't like fallbacks which are silent.' CONTEXT: transcript .claude/output/lit.md -- no sub-index existed, briefing silently exited empty, the agent got nothing from --lit and fell back to web/training knowledge; the segmented global corpus (222 entries + queryable FTS5 .literature.db via literature-search.sh) was never explored.
+
+---
+
+### 774. Hard-mode planning: smaller phases + skeleton plan with follow-up tasks
+- **Effort**: 3-6 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: Task 778
+
+**Description**: [--hard PLANNING leg: make phases SMALLER and divide work into a SKELETON plan + follow-up tasks.] Revise hard-mode planning (skill-planner-hard / planner-hard-agent) so that under --hard the plan is decomposed into genuinely small phases, each completable in one bounded agent round, rather than one large open-ended plan ('Phase 1 strike 3: prove merge_forward_succ' was research-grade). (1) Tighten H8 phase sizing so each phase is a minimal bounded unit (e.g. one lemma / one checklist sub-item / ~100-300 lines output), not a multi-part objective. (2) Add a SKELETON-PLUS-FOLLOW-UP decomposition: when the full objective exceeds what a few small phases can cover, planner-hard produces a SKELETON plan covering the core/critical path and SPAWNS follow-up tasks (via the task-spawn / multi-task-creation mechanism) for the remaining work, instead of inflating phases. The skeleton plan and its follow-up tasks are linked via state.json dependencies. (3) The SKELETON is realized with STRATEGIC SORRIES per the relaxed zero-debt policy (task 778): planner-hard plans the skeleton so that deliberately-placed, documented sorries sit at the DIVISION BOUNDARIES, and EACH strategic sorry maps to a follow-up task/part. The division into follow-up tasks is therefore concretely driven by where strategic sorries are placed on the skeleton -- each sorry's deferral comment names the follow-up task that will discharge it. (4) Ensure the resulting small phases feed the implementation leg (task 772) so each implement round handles exactly one phase. (5) Extend the handoff schema (.claude/context/contracts/wrap-up.md) as needed to track skeleton-vs-follow-up status and the strategic-sorry-to-task mapping, and update skill-implementer-hard Stage 3b to consume the smaller phases. Root cause: RC4 (phases not regimented; oversized open-ended phases drove orchestrator burnout on task 305). Scope: hard-mode only. CONTEXT: part of making --hard proceed in regimented bounded chunks (transcript /orchestrate 305 --hard --lit, .claude/output/hard.md). This is the PLANNING leg of the three-leg --hard model (research=task 777, planning=this task, implementation=task 772), built on the relaxed zero-debt / strategic-sorry policy (task 778). Depends on task 778.
+
+---
+
+### 773. Add orchestrator-role discipline contract and burnout circuit-breaker
+- **Effort**: 3-6 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: Task 772
+
+**Description**: The anti-analysis contract (H2, .claude/context/contracts/anti-analysis.md) is injected only into IMPLEMENT dispatches via build_hard_mode_prompt_context -- the orchestrator ROLE itself is ungoverned, which is why burnout happened in the orchestrator's own context. Create a new contract (e.g. .claude/context/contracts/orchestrator-discipline.md) binding the orchestrator role: NO inline design/proof analysis, NO reading implementation source, NO running builds, NO strategy reconsideration; when a phase cannot complete in a bounded dispatch, the only allowed responses are (a) dispatch a fresh research/audit agent, or (b) escalate via the blocker ladder -- NEVER absorb the work. Wire this contract into skill-orchestrate-hard so it is referenced/enforced at the top of the state-machine loop (analogous to anti-analysis.md injection into implement dispatches). Add a burnout circuit-breaker: detect orchestrator context-exhaustion signals (repeated re-reads of the same file, multiple consecutive inline-reasoning turns with no Agent dispatch, mid-analysis strategy reversal) and force a handoff/dispatch instead of continuing inline. Reference existing context-exhaustion-detection.md if present. Root causes: RC2 (orchestrator role ungoverned by H2), RC5 (no burnout circuit-breaker). Scope: hard-mode only. CONTEXT: burnout signatures in transcript -- circular reconsideration (built renameNF_eval_dup -> doubted it -> abandoned -> re-added -> stripped -> re-added a hypothesis), explicit 'before I concede... ONE more time' (line 2009); ended marking phase BLOCKED with an UNSOUND inline conclusion later caught by a standard-mode audit.
+
+---
+
+### 772. Make hard-mode orchestrator a pure dispatcher (strip implementation capability)
+- **Effort**: 3-6 hours
+- **Status**: [NOT STARTED]
+- **Task Type**: meta
+- **Topic**: agent-system
+- **Dependencies**: None
+
+**Description**: [--hard IMPLEMENTATION leg: focus each agent round on an INDIVIDUAL PHASE, never the entire plan.] Make skill-orchestrate-hard structurally incapable of doing implementation work itself, forcing per-phase delegation. (1) Remove `Edit` from skill-orchestrate-hard `allowed-tools` (currently `Agent, Bash, Read, Edit`) so the orchestrator cannot directly modify source files -- it used Update ~10 times on task 305. (2) Constrain Bash to orchestration-only operations (jq/state.json reads, git status/log, status-sync scripts) and explicitly forbid build/test/compiler invocations (lake build, lean-lsp, etc.) in the orchestrator context. (3) Require BLOCKING, foreground single-phase dispatch: exactly one Agent call per cycle, wait for its handoff return, never interleave the orchestrator's own work -- forbid background/parallel dispatch of implementation agents (root cause: transcript line 92 'launched it in the background and will continue the orchestration'). (4) Restrict orchestrator Reads to handoff JSON, state.json, and plan files ONLY -- forbid reading implementation source files. (5) Under the relaxed zero-debt policy (task 778), a VALID outcome of an implementation round is a green-building strategic-sorry SKELETON for the phase -- each strategic sorry documented and mapped to a tracked follow-up part -- rather than a fully complete phase; the orchestrator must ACCEPT and route such skeleton handoffs (reading the sorry_inventory) as progress, not demand completeness in one round. Root causes: RC1 (orchestrator had Edit + unrestricted Bash), RC3 (H1 not enforced as a hard loop boundary; background dispatch). Scope: hard-mode only; do NOT modify base skill-orchestrate. CONTEXT: /orchestrate 305 --hard --lit (transcript .claude/output/hard.md) -- the orchestrator became the implementation agent (lines 954-2700: zero implementation dispatches, only inline proof reasoning + ~10 direct Update/lake-build/lean-lsp calls). Goal: each --hard implementation round dispatches exactly ONE phase to a bounded sub-agent; the orchestrator never takes the plan as a whole. Pairs with the planning leg (task 774), which produces the small phases / strategic-sorry skeleton this leg consumes, and the relaxed-debt policy (task 778).
+
+---
+
+### 87. Investigate terminal directory change when opening neovim in wezterm
+- **Effort**: TBD
+- **Status**: [RESEARCHED]
+- **Task Type**: neovim
+- **Topic**: Terminal UI
+- **Dependencies**: None
+- **Research**: [087_investigate_wezterm_terminal_directory_change/reports/research-001.md]
+
+**Description**: Investigate why the terminal working directory changes to a project root when opening neovim sessions in wezterm from the home directory (~). Determine whether this behavior is caused by neovim or wezterm (configured in ~/.dotfiles/config/). Identify if any functionality depends on this behavior before modifying it. Goal is to avoid changing the terminal directory unless necessary.
+
+---
+
+### 78. Fix Himalaya SMTP authentication failure when sending emails
+- **Effort**: 1-2 hours
+- **Status**: [PLANNED]
+- **Task Type**: neovim
+- **Topic**: Email Integration
+- **Dependencies**: None
+- **Research**: [078_fix_himalaya_smtp_authentication_failure/reports/research-001.md]
+- **Plan**: [078_fix_himalaya_smtp_authentication_failure/plans/implementation-001.md]
+
+**Description**: Fix Gmail SMTP authentication failure when sending emails via Himalaya (<leader>me). Error: Authentication failed: Code: 535, Enhanced code: 5.7.8, Message: Username and Password not accepted. The error occurs with TLS connection attempts and persists through multiple retry attempts. Identify and fix the root cause of the SMTP credential configuration.

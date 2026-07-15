@@ -1,0 +1,380 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-05-15",
+  "entry_count": 18,
+  "total_tokens": 2616,
+  "entries": [
+    {
+      "id": "MEM-plan-delegation-required",
+      "path": ".memory/10-Memories/MEM-plan-delegation-required.md",
+      "title": "Artifact Creation Must Use Skill Delegation",
+      "summary": "When executing /plan, /research, or /implement commands, always invoke the appropriate Skill tool to create artifact files rather than writing directly from the orchestrator level.",
+      "topic": "agent-system",
+      "category": "enforcement",
+      "keywords": [
+        "delegation",
+        "artifact",
+        "skill",
+        "bypass-prevention",
+        "enforcement"
+      ],
+      "token_count": 302,
+      "created": "2026-04-13",
+      "modified": "2026-04-13",
+      "last_retrieved": "2026-06-22",
+      "retrieval_count": 39
+    },
+    {
+      "id": "MEM-config-nextcord-discord-nixos",
+      "path": ".memory/10-Memories/MEM-config-nextcord-discord-nixos.md",
+      "title": "Nextcord is the optimal Discord bot library on NixOS",
+      "summary": "For Discord bot development on NixOS, nextcord (python3Packages.nextcord, v3.1.1) is the optimal choice",
+      "topic": "configuration",
+      "category": "CONFIG",
+      "keywords": [
+        "discord",
+        "nextcord",
+        "discordpy",
+        "nixpkgs",
+        "bot",
+        "python"
+      ],
+      "token_count": 65,
+      "created": "2026-05-12",
+      "modified": "2026-05-12",
+      "last_retrieved": "2026-05-14",
+      "retrieval_count": 3
+    },
+    {
+      "id": "MEM-insight-opencode-headless-cli-api",
+      "path": ".memory/10-Memories/MEM-insight-opencode-headless-cli-api.md",
+      "title": "OpenCode headless/CLI API for programmatic agent control",
+      "summary": "OpenCode has a comprehensive headless/CLI API: 'opencode serve' starts a persistent server",
+      "topic": "insight",
+      "category": "INSIGHT",
+      "keywords": [
+        "opencode",
+        "headless",
+        "server",
+        "CLI",
+        "session-management",
+        "programmatic-access"
+      ],
+      "token_count": 91,
+      "created": "2026-05-12",
+      "modified": "2026-05-12",
+      "last_retrieved": "2026-05-15",
+      "retrieval_count": 13
+    },
+    {
+      "id": "MEM-agent-system-reload-propagation",
+      "path": ".memory/10-Memories/MEM-agent-system-reload-propagation.md",
+      "title": "Agent system changes propagate via extension loader reload",
+      "summary": "Agent system changes in nvim-config propagate to child projects (ProofChecker etc.) by reloading via <leader>al -- no separate porting tasks needed.",
+      "topic": "agent-system/extension-loader",
+      "category": "WORKFLOW",
+      "keywords": [
+        "extension-loader",
+        "reload",
+        "leader-al",
+        "propagation",
+        "agent-system",
+        "neovim",
+        "child-projects"
+      ],
+      "token_count": 78,
+      "created": "2026-05-15",
+      "modified": "2026-05-15",
+      "last_retrieved": "2026-05-21",
+      "retrieval_count": 2
+    },
+    {
+      "id": "MEM-insight-command-skill-tool",
+      "path": ".memory/10-Memories/MEM-insight-command-skill-tool.md",
+      "title": "Command files cannot delegate Skill tool invocations to bash scripts",
+      "summary": "Command files cannot delegate Skill tool invocations to bash scripts",
+      "topic": "task-command",
+      "category": "INSIGHT",
+      "keywords": [
+        "command",
+        "skill-tool",
+        "bash-script",
+        "dispatch",
+        "multi-task",
+        "constraint"
+      ],
+      "token_count": 100,
+      "created": "2026-05-22",
+      "modified": "2026-05-22",
+      "last_retrieved": "2026-05-25",
+      "retrieval_count": 3
+    },
+    {
+      "id": "MEM-pattern-gate-out-defensive-check",
+      "path": ".memory/10-Memories/MEM-pattern-gate-out-defensive-check.md",
+      "title": "The inline GATE OUT defensive check blocks in research.md and plan.md (~38 lines",
+      "summary": "The inline GATE OUT defensive check blocks in research.md and plan.md (~38 lines",
+      "topic": "task-gate",
+      "category": "PATTERN",
+      "keywords": [
+        "gate-out",
+        "defensive-check",
+        "redundant",
+        "command-file",
+        "state-json"
+      ],
+      "token_count": 92,
+      "created": "2026-05-22",
+      "modified": "2026-05-22",
+      "last_retrieved": null,
+      "retrieval_count": 0
+    },
+    {
+      "id": "MEM-insight-index-json-tier",
+      "path": ".memory/10-Memories/MEM-insight-index-json-tier.md",
+      "title": "When classifying context index entries as Tier 4 (on-demand), also clear their a",
+      "summary": "When classifying context index entries as Tier 4 (on-demand), also clear their a",
+      "topic": "task-index",
+      "category": "INSIGHT",
+      "keywords": [
+        "index.json",
+        "tier",
+        "load_when",
+        "agents",
+        "context-budget",
+        "enforcement"
+      ],
+      "token_count": 90,
+      "created": "2026-05-22",
+      "modified": "2026-05-22",
+      "last_retrieved": "2026-06-12",
+      "retrieval_count": 4
+    },
+    {
+      "id": "MEM-technique-validate-context-budgets-budget",
+      "path": ".memory/10-Memories/MEM-technique-validate-context-budgets-budget.md",
+      "title": "validate-context-budgets.sh provides automated enforcement of per-agent token bu",
+      "summary": "validate-context-budgets.sh provides automated enforcement of per-agent token bu",
+      "topic": "task-validate",
+      "category": "TECHNIQUE",
+      "keywords": [
+        "validate-context-budgets",
+        "budget",
+        "token",
+        "enforcement",
+        "script",
+        "index.json"
+      ],
+      "token_count": 71,
+      "created": "2026-05-22",
+      "modified": "2026-05-22",
+      "last_retrieved": "2026-06-20",
+      "retrieval_count": 3
+    },
+    {
+      "id": "MEM-insight-general-implementation-agent-budget",
+      "path": ".memory/10-Memories/MEM-insight-general-implementation-agent-budget.md",
+      "title": "The minimum irreducible context for general-implementation-agent is 8,048 tokens",
+      "summary": "The minimum irreducible context for general-implementation-agent is 8,048 tokens",
+      "topic": "task-general",
+      "category": "INSIGHT",
+      "keywords": [
+        "general-implementation-agent",
+        "budget",
+        "minimum",
+        "return-metadata",
+        "checkpoint",
+        "progress-file"
+      ],
+      "token_count": 76,
+      "created": "2026-05-22",
+      "modified": "2026-05-22",
+      "last_retrieved": "2026-06-20",
+      "retrieval_count": 2
+    },
+    {
+      "id": "MEM-pattern-synthesis-fork-team-research",
+      "path": ".memory/10-Memories/MEM-pattern-synthesis-fork-team-research.md",
+      "title": "Synthesis fork pattern for team research: The lead should NOT read all teammate ",
+      "summary": "Synthesis fork pattern for team research: The lead should NOT read all teammate ",
+      "topic": "task-synthesis",
+      "category": "PATTERN",
+      "keywords": [
+        "synthesis-fork",
+        "team-research",
+        "context-protection",
+        "anonymous-fork",
+        "lead-agent"
+      ],
+      "token_count": 130,
+      "created": "2026-05-25",
+      "modified": "2026-05-25",
+      "last_retrieved": null,
+      "retrieval_count": 0
+    },
+    {
+      "id": "MEM-pattern-synthesis-agent-team-research",
+      "path": ".memory/10-Memories/MEM-pattern-synthesis-agent-team-research.md",
+      "title": "When team skills (skill-team-research, skill-team-plan) need to synthesize outpu",
+      "summary": "When team skills (skill-team-research, skill-team-plan) need to synthesize outpu",
+      "topic": "task-synthesis",
+      "category": "PATTERN",
+      "keywords": [
+        "synthesis-agent",
+        "team-research",
+        "context-protection",
+        "lead-pattern",
+        "teammate-synthesis",
+        "skill-team-research"
+      ],
+      "token_count": 150,
+      "created": "2026-05-25",
+      "modified": "2026-05-25",
+      "last_retrieved": null,
+      "retrieval_count": 0
+    },
+    {
+      "id": "MEM-pattern-script-porting-dual-system",
+      "path": ".memory/10-Memories/MEM-pattern-script-porting-dual-system.md",
+      "title": "When porting scripts between dual-system architectures (.claude/ and .opencode/)",
+      "summary": "When porting scripts between dual-system architectures (.claude/ and .opencode/)",
+      "topic": "task-script",
+      "category": "PATTERN",
+      "keywords": [
+        "script-porting",
+        "dual-system",
+        "dependency-order",
+        "path-substitution",
+        "claude-opencode"
+      ],
+      "token_count": 261,
+      "created": "2026-06-08",
+      "modified": "2026-06-08",
+      "last_retrieved": null,
+      "retrieval_count": 0
+    },
+    {
+      "id": "MEM-pattern-orchestrator-system-skill-orchestrate",
+      "path": ".memory/10-Memories/MEM-pattern-orchestrator-system-skill-orchestrate.md",
+      "title": "The .claude/ agent system has TWO distinct orchestrator concepts: (1) skill-orch",
+      "summary": "The .claude/ agent system has TWO distinct orchestrator concepts: (1) skill-orch",
+      "topic": "task-orchestrator",
+      "category": "PATTERN",
+      "keywords": [
+        "orchestrator-system",
+        "skill-orchestrate",
+        "skill-orchestrator",
+        "lifecycle-state-machine",
+        "routing-skill",
+        "dual-system"
+      ],
+      "token_count": 178,
+      "created": "2026-06-08",
+      "modified": "2026-06-08",
+      "last_retrieved": null,
+      "retrieval_count": 0
+    },
+    {
+      "id": "MEM-pattern-orchestrator-porting",
+      "path": ".memory/10-Memories/MEM-pattern-orchestrator-porting.md",
+      "title": "When porting the orchestrator system from .claude/ to .opencode/, the dependency",
+      "summary": "When porting the orchestrator system from .claude/ to .opencode/, the dependency",
+      "topic": "task-orchestrator",
+      "category": "PATTERN",
+      "keywords": [
+        "orchestrator",
+        "porting",
+        "state-machine",
+        "skill-orchestrate",
+        "dependency-driven"
+      ],
+      "token_count": 166,
+      "created": "2026-06-08",
+      "modified": "2026-06-08",
+      "last_retrieved": null,
+      "retrieval_count": 0
+    },
+    {
+      "id": "MEM-pattern-synthesis-agent-opencode",
+      "path": ".memory/10-Memories/MEM-pattern-synthesis-agent-opencode.md",
+      "title": "OpenCode's synthesis-agent pattern differs from .claude/: (1) The .claude/ team-",
+      "summary": "OpenCode's synthesis-agent pattern differs from .claude/: (1) The .claude/ team-",
+      "topic": "task-synthesis",
+      "category": "PATTERN",
+      "keywords": [
+        "synthesis-agent",
+        "opencode",
+        "team-mode",
+        "context-protection",
+        "port-pattern",
+        "team-research"
+      ],
+      "token_count": 193,
+      "created": "2026-06-08",
+      "modified": "2026-06-08",
+      "last_retrieved": null,
+      "retrieval_count": 0
+    },
+    {
+      "id": "MEM-standard-opencode-agent-frontmatter",
+      "path": ".memory/10-Memories/MEM-standard-opencode-agent-frontmatter.md",
+      "title": "OpenCode agent frontmatter must NOT include the 'model:' field",
+      "summary": "OpenCode agent frontmatter must NOT include the 'model:' field",
+      "topic": "task-opencode",
+      "category": "STANDARD",
+      "keywords": [
+        "opencode",
+        "agent-frontmatter",
+        "model-field",
+        "port-pattern",
+        "validation"
+      ],
+      "token_count": 182,
+      "created": "2026-06-08",
+      "modified": "2026-06-08",
+      "last_retrieved": null,
+      "retrieval_count": 0
+    },
+    {
+      "id": "MEM-pattern-opencode-agent-frontmatter",
+      "path": ".memory/10-Memories/MEM-pattern-opencode-agent-frontmatter.md",
+      "title": "OpenCode agent frontmatter pattern: Only `name` and `description` fields are sup",
+      "summary": "OpenCode agent frontmatter pattern: Only `name` and `description` fields are sup",
+      "topic": "task-opencode",
+      "category": "PATTERN",
+      "keywords": [
+        "opencode",
+        "agent-frontmatter",
+        "port-pattern",
+        "model-field",
+        "allowed-tools",
+        "synthesis-agent"
+      ],
+      "token_count": 197,
+      "created": "2026-06-08",
+      "modified": "2026-06-08",
+      "last_retrieved": null,
+      "retrieval_count": 0
+    },
+    {
+      "id": "MEM-workflow-opencode-smoke-test",
+      "path": ".memory/10-Memories/MEM-workflow-opencode-smoke-test.md",
+      "title": "OpenCode static structural smoke test pattern for agent files: when live Task to",
+      "summary": "OpenCode static structural smoke test pattern for agent files: when live Task to",
+      "topic": "task-opencode",
+      "category": "WORKFLOW",
+      "keywords": [
+        "opencode",
+        "smoke-test",
+        "agent-validation",
+        "port-verification",
+        "static-validation"
+      ],
+      "token_count": 194,
+      "created": "2026-06-08",
+      "modified": "2026-06-08",
+      "last_retrieved": null,
+      "retrieval_count": 0
+    }
+  ]
+}

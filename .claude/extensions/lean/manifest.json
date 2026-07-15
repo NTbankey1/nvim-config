@@ -1,0 +1,90 @@
+{
+  "name": "lean",
+  "version": "1.0.0",
+  "description": "Lean 4 theorem prover support with MCP integration for proof assistance",
+  "task_type": "lean4",
+  "dependencies": [
+    "core",
+    "literature"
+  ],
+  "provides": {
+    "agents": [
+      "lean-research-agent.md",
+      "lean-implementation-agent.md",
+      "lean-research-hard-agent.md",
+      "lean-implementation-hard-agent.md"
+    ],
+    "skills": [
+      "skill-lean-research",
+      "skill-lean-implementation",
+      "skill-lake-repair",
+      "skill-lean-version",
+      "skill-lean-research-hard",
+      "skill-lean-implementation-hard"
+    ],
+    "commands": [
+      "lake.md",
+      "lean.md"
+    ],
+    "rules": [
+      "lean4.md"
+    ],
+    "context": [
+      "project/lean4",
+      "contracts"
+    ],
+    "scripts": [],
+    "hooks": []
+  },
+  "routing": {
+    "research": {
+      "lean4": "skill-lean-research",
+      "lean4:lake": "skill-lake-repair",
+      "lean4:version": "skill-lean-version"
+    },
+    "plan": {
+      "lean4": "skill-planner",
+      "lean4:lake": "skill-planner",
+      "lean4:version": "skill-planner"
+    },
+    "implement": {
+      "lean4": "skill-lean-implementation",
+      "lean4:lake": "skill-lake-repair",
+      "lean4:version": "skill-lean-version"
+    }
+  },
+  "routing_hard": {
+    "research": {
+      "lean4": "skill-lean-research-hard"
+    },
+    "implement": {
+      "lean4": "skill-lean-implementation-hard"
+    }
+  },
+  "merge_targets": {
+    "claudemd": {
+      "source": "EXTENSION.md",
+      "target": ".claude/CLAUDE.md",
+      "section_id": "extension_lean"
+    },
+    "settings": {
+      "source": "settings-fragment.json",
+      "target": ".claude/settings.local.json"
+    },
+    "index": {
+      "source": "index-entries.json",
+      "target": ".claude/context/index.json"
+    },
+    "opencode_json": {
+      "source": "opencode-agents.json",
+      "target": "opencode.json"
+    }
+  },
+  "mcp_servers": {
+    "lean-lsp": {
+      "command": "uvx",
+      "args": ["lean-lsp-mcp"]
+    }
+  },
+  "hooks": {}
+}

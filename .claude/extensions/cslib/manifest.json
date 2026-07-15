@@ -1,0 +1,93 @@
+{
+  "name": "cslib",
+  "version": "1.0.0",
+  "description": "CSLib Lean 4 computer science library formalization support",
+  "task_type": "cslib",
+  "dependencies": [
+    "core",
+    "lean",
+    "literature"
+  ],
+  "provides": {
+    "agents": [
+      "cslib-research-agent.md",
+      "cslib-implementation-agent.md",
+      "cslib-research-hard-agent.md",
+      "cslib-implementation-hard-agent.md",
+      "pr-review-research-agent.md",
+      "pr-review-implementation-agent.md",
+      "cslib-vet-agent.md"
+    ],
+    "skills": [
+      "skill-cslib-research",
+      "skill-cslib-implementation",
+      "skill-pr-implementation",
+      "skill-cslib-research-hard",
+      "skill-cslib-implementation-hard",
+      "skill-pr-review-research",
+      "skill-pr-review-implementation",
+      "skill-cslib-vet"
+    ],
+    "commands": ["pr.md", "vet.md"],
+    "rules": [
+      "cslib.md",
+      "cslib-lint-fix.md"
+    ],
+    "context": [
+      "project/cslib"
+    ],
+    "scripts": [],
+    "hooks": []
+  },
+  "routing": {
+    "research": {
+      "cslib": "skill-cslib-research",
+      "pr": "skill-pr-review-research"
+    },
+    "plan": {
+      "cslib": "skill-planner",
+      "pr": "skill-planner"
+    },
+    "implement": {
+      "cslib": "skill-cslib-implementation",
+      "pr": "skill-pr-review-implementation"
+    }
+  },
+  "routing_hard": {
+    "research": {
+      "cslib": "skill-cslib-research-hard",
+      "pr": "skill-researcher-hard"
+    },
+    "plan": {
+      "cslib": "skill-planner-hard",
+      "pr": "skill-planner-hard"
+    },
+    "implement": {
+      "cslib": "skill-cslib-implementation-hard",
+      "pr": "skill-implementer-hard"
+    }
+  },
+  "keyword_overrides": {
+    "cslib": {
+      "keywords": ["lean", "lean4", "mathlib", "theorem", "proof", "lint-fix"],
+      "aliases": ["lean4"]
+    },
+    "pr": {
+      "keywords": ["pr", "pull request", "submit", "upstream", "branch", "rebase", "cherry-pick"],
+      "aliases": []
+    }
+  },
+  "merge_targets": {
+    "claudemd": {
+      "source": "EXTENSION.md",
+      "target": ".claude/CLAUDE.md",
+      "section_id": "extension_cslib"
+    },
+    "index": {
+      "source": "index-entries.json",
+      "target": ".claude/context/index.json"
+    }
+  },
+  "mcp_servers": {},
+  "hooks": {}
+}

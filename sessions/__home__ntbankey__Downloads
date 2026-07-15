@@ -1,0 +1,67 @@
+let SessionLoad = 1
+let s:so_save = &g:so | let s:siso_save = &g:siso | setg so=0 siso=0 | setl so=-1 siso=-1
+let v:this_session=expand("<sfile>:p")
+silent only
+silent tabonly
+cd ~/Downloads
+if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
+  let s:wipebuf = bufnr('%')
+endif
+let s:shortmess_save = &shortmess
+if &shortmess =~ 'A'
+  set shortmess=aoOA
+else
+  set shortmess=aoO
+endif
+badd +19 ~/Downloads/linuxdoctor_thesis/thesis_full_content.txt
+badd +1 zipfile:///home/ntbankey/Downloads/linuxdoctor_thesis/final/LinuxDoctor_Thesis.docx::
+badd +19 ~/Downloads/linuxdoctor_thesis/linux-doctor/docs/README.md
+badd +21 ~/Downloads/linuxdoctor_thesis/final/LinuxDoctor_Thesis.pdf
+badd +20 ~/Downloads/linuxdoctor_thesis/final/thesis.html
+badd +1 zipfile:///home/ntbankey/Downloads/linuxdoctor_thesis/final/LinuxDoctor_Thesis.docx::\ \ -----------------------------------------------------------------------
+badd +1 zipfile:///home/ntbankey/Downloads/linuxdoctor_thesis/final/LinuxDoctor_Thesis.docx::\*\*University\ of\ Transport\ Ho\ Chi\ Minh\ City\ (UTH)\*\*/
+badd +1 ~/Downloads/linuxdoctor_thesis/final/mermaid-config.json
+badd +30 ~/Downloads/linuxdoctor_thesis/final/LinuxDoctor_Thesis_Professional.pdf
+badd +1 zipfile:///home/ntbankey/Downloads/linuxdoctor_thesis/final/LinuxDoctor_Thesis.docx::\*\*Students:\*\*
+badd +1 ~/Downloads/linuxdoctor_thesis/linux-doctor/uv.lock
+badd +6 ~/Downloads/linuxdoctor_thesis/linux-doctor/main.py
+badd +1 ~/Downloads/linuxdoctor_thesis/linux-doctor/.python-version
+badd +23 ~/Downloads/linuxdoctor_thesis/final/LinuxDoctor_Thesis_Redesigned.pdf
+badd +1 zipfile:///home/ntbankey/Downloads/linuxdoctor_thesis/final/LinuxDoctor_Thesis_Professional.docx::2.\ \ \*\*Triage:\*\*\ The\ engineer\ reads\ the\ symptom\ description\ and\ forms\ an\ initial\ hypothesis\ about\ which\ subsystem\ is\ affected.
+badd +1 zipfile:///home/ntbankey/Downloads/linuxdoctor_thesis/final/LinuxDoctor_Thesis_Redesigned.docx::5.\ \ \*\*Root\ Cause\ Determination:\*\*\ When\ sufficient\ evidence\ converges,\ the\ engineer\ identifies\ the\ most\ probable\ root\ cause.
+argglobal
+%argdel
+edit zipfile:///home/ntbankey/Downloads/linuxdoctor_thesis/final/LinuxDoctor_Thesis.docx::\ \ -----------------------------------------------------------------------
+argglobal
+setlocal foldmethod=manual
+setlocal foldexpr=v:lua.vim.treesitter.foldexpr()
+setlocal foldmarker={{{,}}}
+setlocal foldignore=#
+setlocal foldlevel=99
+setlocal foldminlines=1
+setlocal foldnestmax=20
+setlocal foldenable
+silent! normal! zE
+let &fdl = &fdl
+let s:l = 1 - ((0 * winheight(0) + 24) / 49)
+if s:l < 1 | let s:l = 1 | endif
+keepjumps exe s:l
+normal! zt
+keepjumps 1
+normal! 0
+tabnext 1
+if exists('s:wipebuf') && len(win_findbuf(s:wipebuf)) == 0 && getbufvar(s:wipebuf, '&buftype') isnot# 'terminal'
+  silent exe 'bwipe ' . s:wipebuf
+endif
+unlet! s:wipebuf
+set winheight=1 winwidth=20
+let &shortmess = s:shortmess_save
+let s:sx = expand("<sfile>:p:r")."x.vim"
+if filereadable(s:sx)
+  exe "source " . fnameescape(s:sx)
+endif
+let &g:so = s:so_save | let &g:siso = s:siso_save
+nohlsearch
+doautoall SessionLoadPost
+unlet SessionLoad
+" vim: set ft=vim :
